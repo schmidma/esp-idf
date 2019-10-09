@@ -47,11 +47,17 @@ struct httpd_ssl_config {
     /** CA certificate byte length */
     size_t cacert_len;
 
+    /** Server certificate */
+    const uint8_t *servercert_pem;
+
+    /** Server certificate byte length */
+    size_t servercert_len;
+
     /** Private key */
-    const uint8_t *prvtkey_pem;
+    const uint8_t *serverkey_pem;
 
     /** Private key byte length */
-    size_t prvtkey_len;
+    size_t serverkey_len;
 
     /** Transport Mode (default secure) */
     httpd_ssl_transport_mode_t transport_mode;
@@ -100,8 +106,10 @@ typedef struct httpd_ssl_config httpd_ssl_config_t;
     },                                            \
     .cacert_pem = NULL,                           \
     .cacert_len = 0,                              \
-    .prvtkey_pem = NULL,                          \
-    .prvtkey_len = 0,                             \
+    .servercert_pem = NULL,                       \
+    .servercert_len = 0,                          \
+    .serverkey_pem = NULL,                        \
+    .serverkey_len = 0,                           \
     .transport_mode = HTTPD_SSL_TRANSPORT_SECURE, \
     .port_secure = 443,                           \
     .port_insecure = 80,                          \

@@ -150,22 +150,33 @@ static esp_tls_cfg_server_t *create_secure_context(const struct httpd_ssl_config
     if (!cfg) {
         return NULL;
     }
-    cfg->servercert_pem_buf = (unsigned char *)malloc(config->cacert_len);
+    // CA cert
+    cfg->cacert_pem_buf = (unsigned char *)malloc(config->cacert_len);
+    if (!cfg->cacert_pem_buf) {
+        free(cfg);
+        return NULL;
+    }
+    memcpy((char *)cfg->cacert_pem_buf, config->cacert_pem, config->cacert_len);
+    cfg->cacert_pem_bytes = config->cacert_len;
+
+    // Server cert
+    cfg->servercert_pem_buf = (unsigned char *)malloc(config->servercert_len);
     if (!cfg->servercert_pem_buf) {
         free(cfg);
         return NULL;
     }
-    memcpy((char *)cfg->servercert_pem_buf, config->cacert_pem, config->cacert_len);
-    cfg->servercert_pem_bytes = config->cacert_len;
+    memcpy((char *)cfg->servercert_pem_buf, config->servercert_pem, config->servercert_len);
+    cfg->servercert_pem_bytes = config->servercert_len;
 
-    cfg->serverkey_pem_buf = (unsigned char *)malloc(config->prvtkey_len);
+    // Server key
+    cfg->serverkey_pem_buf = (unsigned char *)malloc(config->serverkey_len);
     if (!cfg->serverkey_pem_buf) {
         free((void *)cfg->servercert_pem_buf);
         free(cfg);
         return NULL;
     }
-    memcpy((char *)cfg->serverkey_pem_buf, config->prvtkey_pem, config->prvtkey_len);
-    cfg->serverkey_pem_bytes = config->prvtkey_len;
+    memcpy((char *)cfg->serverkey_pem_buf, config->serverkey_pem, config->serverkey_len);
+    cfg->serverkey_pem_bytes = config->serverkey_len;
 
     return cfg;
 }
